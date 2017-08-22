@@ -21,7 +21,10 @@ from django.conf import settings
 from . import views
 
 urlpatterns = [
+    # /admin/
     url(r'^admin/', admin.site.urls),
+    # /logs/
+    url(r'^logs/',include('cmdMonitor.urls',namespace='cmdMonitor')),
 ]
 
 if settings.DEBUG:

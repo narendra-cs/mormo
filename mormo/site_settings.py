@@ -12,7 +12,7 @@ DB_PORT = ''
 # MongoDB settings
 
 MONGODB_NAME = 'commandlogs'
-MONGODB_USER = 'mormor'
-MONGODB_PASSWD = 'passwd#123@QW!'
+MONGODB_USER = 'cmd_monitor'
+MONGODB_PASSWD = 'cmd_monitor@123'
 MONGODB_HOST = 'localhost'
 MONGODB_PORT = '27017'
