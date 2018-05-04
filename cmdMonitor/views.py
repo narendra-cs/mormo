@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Logs
 from datetime import datetime
 import pandas as pd
-import openpyxl,os
+import os
 
 # Global variables
 logs=''
@@ -23,11 +23,11 @@ def index(request):
 
 # generate file for Download
 def generateFile(logs,filename='logs.xlsx'):
-	timestamp_data=[]
-	users=[]
-	identity=[]
-	host=[]
-	cmd=[]
+	timestamp_data =  []
+	users =  []
+	identity =  []
+	host =  []
+	cmd = []
 
 	for log in logs:
 		timestamp_data.append(log.timestamp)
@@ -40,15 +40,15 @@ def generateFile(logs,filename='logs.xlsx'):
 	log_df=pd.DataFrame.from_dict(log_dict,orient='index')
 	log_df=log_df.transpose()
 
-	file_path=settings.STATIC_ROOT+filename
+	file_path=os.path.join(settings.STATIC_ROOT,filename)
 	if os.path.isfile(file_path):
 		os.remove(file_path)
 
-	if filename.split('.')[-1]=='xlsx':
+	if '.xlsx' == os.path.splitext(filename)[-1]:
 		log_df.to_excel(file_path,sheet_name='logs',index=False)
-	elif filename.split('.')[-1]=='csv':
+	elif '.csv' == os.path.splitext(filename)[-1]:
 		log_df.to_csv(file_path,index=False)
-	elif filename.split('.')[-1]=='json':
+	elif '.json' == os.path.splitext(filename)[-1]:
 		log_df.to_json(file_path,orient="records",date_format='iso')
 	return file_path
 
@@ -83,9 +83,9 @@ def search(request):
 			querry['cmd'] = cmd
 	download_q=querry
 	logs=Logs.objects.filter(**querry).order_by('-timestamp')
-	if querry.has_key('timestamp__gte'):
+	if 'timestamp__gte' in querry.keys():
 		querry['timestamp__gte']=querry['timestamp__gte'].strftime('%m/%d/%Y %I:%M %p')
-	if querry.has_key('timestamp__lte'):
+	if 'timestamp__lte' in querry.keys():
 		querry['timestamp__lte']=querry['timestamp__lte'].strftime('%m/%d/%Y %I:%M %p')
 	context={'all_logs':logs,'download_file':'True','querry':querry,'regex':regex}
 	return render(request,'cmdMonitor/index.html',context)
@@ -94,9 +94,8 @@ def search(request):
 def download(request,filename):
 	logs=Logs.objects.filter(**download_q).order_by('-timestamp')
 	path_to_file=generateFile(logs,filename)
-	f=open(path_to_file,'rb')
-	response = HttpResponse(f.read(),content_type='application/force-download')
-	response['Content-Disposition'] = 'attachment; filename=%s' % (filename)
-	response['X-Sendfile'] = path_to_file
-	f.close()
+	with open(path_to_file,'rb') as f:
+		response = HttpResponse(f.read(),content_type='application/force-download')
+		response['Content-Disposition'] = 'attachment; filename=%s' % (filename)
+		response['X-Sendfile'] = path_to_file
 	return response

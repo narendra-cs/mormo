@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.conf.urls import url,include
+from django.conf.urls import re_path
 from . import views
 
+app_name = 'cmdMonitor'
+
 urlpatterns = [
-	url(r'^$',views.index,name='index'),
-	url(r'^search/$',views.search,name='search'),
-	url(r'^download/(?P<filename>\w+\.\w+)/$',views.download,name='download'),
+	re_path(r'^$',views.index,name='index'),
+	re_path(r'^search/$',views.search,name='search'),
+	re_path(r'^download/(?P<filename>\w+\.\w+)/$',views.download,name='download'),
 ]

@@ -1,9 +1,82 @@
 {% extends 'cmdMonitor/base_site.html' %}
 
 {% block title %}
-command logs title
+Command Logs
 {% endblock %}
+{% block stylesheet %}
+    <link href="//cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
 
+<style type="text/css"  rel="stylesheet">
+.logs_table thead {
+	width: 100%;
+}
+
+.logs_table tbody {
+	height: 612px;
+	overflow-y: auto;
+	width: 100%;
+}
+
+.logs_table thead tr{
+	width: 99%;
+}
+
+ .logs_table tr{
+ 	width: 100%;
+ }
+
+.logs_table thead, .logs_table tbody, .logs_table tr, .logs_table td, .logs_table th{
+	display: inline-block;
+}
+
+.logs_table thead{
+	background: #d91f2d;
+	color: #fff;
+}
+
+.logs_table tbody td, .logs_table thead > tr> th{
+	float: left;
+	border-bottom-width: 0;
+}
+
+.logs_table>tbody>tr>td, .logs_table>tbody>tr>th, .logs_table>tfoot>tr>td, .logs_table>tfoot>tr>th, .logs_table>thead>tr>td, .logs_table>thead>tr>th{
+	padding: 8px;
+	height: 60px;
+	text-align: center;
+	line-height: 32px;
+}
+
+.logs_table .cmd{
+text-align: left;
+padding:4px;
+line-height:1.5;
+}
+
+.logs_table_scrollbar{
+	height: 612px;
+	overflow-y: scroll;
+}
+
+.logs_table_scrollbar::-webkit-scrollbar-track{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.9);
+	border-radius: 10px;
+	background-color: #444444;
+}
+
+.logs_table_scrollbar::-webkit-scrollbar{
+	width: 1%;
+	min-width: 5px;
+	background-color: #F5F5F5;
+}
+
+.logs_table_scrollbar::-webkit-scrollbar-thumb{
+	border-radius: 10px;
+	background-color: #D62929;
+	background-image: -webkit-linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.4) 50%, transparent, transparent)
+}
+
+</style>
+{% endblock %}
 {% block filter_form %}
 <form class="form" action="{% url 'cmdMonitor:search' %}" method="post">
     {% csrf_token %}
@@ -14,7 +87,7 @@ command logs title
             <div class='input-group date' id='datetimepicker-from'>
                 <input type='text' class="form-control" name="from" placeholder="From" {% if querry.timestamp__gte %} value='{{querry.timestamp__gte}}'{% endif %}/>
                 <span class="input-group-addon">
-                    <i class="fa fa-calendar" style="font-size:20px"></i>
+                    <i class="fa fa-calendar" style="font-size:20px;"></i>
                 </span>
             </div>
       </div>
@@ -24,7 +97,7 @@ command logs title
           <div class='input-group' id="user">
               <input type="text" class="form-control"  name="user" placeholder="User" {% if querry.user %} value='{{querry.user}}'{% endif %}/> 
               <span class="input-group-addon">
-                <i class="fa fa-user" style="font-size:20px"></i>
+                <i class="fa fa-user" style="font-size:20px;"></i>
               </span>
           </div>
       </div>
@@ -34,7 +107,7 @@ command logs title
           <div class='input-group' id="identity">
               <input type="text" class="form-control"  name="identity" placeholder="Identity" {% if querry.identity %} value='{{querry.identity}}'{% endif %} />
               <span class="input-group-addon">
-                <i class="fa fa-user" style="font-size:20px"></i>
+                <i class="fa fa-user" style="font-size:20px;"></i>
               </span>
           </div>
       </div>
@@ -44,7 +117,7 @@ command logs title
             <div class='input-group'  id="host">
               <input type="text" class="form-control" name="host" placeholder="Host" {% if querry.host__icontains %} value='{{querry.host__icontains}}'{% endif %} />
               <span class="input-group-addon">
-                <i class="fa fa-desktop" style="font-size:20px"></i>
+                <i class="fa fa-desktop" style="font-size:20px;"></i>
               </span>
             </div>
       </div>
@@ -57,7 +130,7 @@ command logs title
             <div class='input-group date' id='datetimepicker-to'>
                 <input type='text' class="form-control" name="to" placeholder="To" {% if querry.timestamp__lte %} value='{{querry.timestamp__lte}}'{% endif %} />
                 <span class="input-group-addon">
-                    <i class="fa fa-calendar" style="font-size:20px"></i>
+                    <i class="fa fa-calendar" style="font-size:20px;"></i>
                 </span>
             </div>
       </div>
@@ -76,7 +149,7 @@ command logs title
                         value='{{querry.cmd__iendswith}}'
                     {% endif %} />
               <span class="input-group-addon">
-                <i class="fa fa-code" style="font-size:20px"></i>
+                <i class="fa fa-code" style="font-size:20px;"></i>
               </span>
           </div>
       </div>
@@ -95,7 +168,7 @@ command logs title
     <!-- 			Filter Button 		-->
       <div class="col-sm-3">
         <button type="submit" class="btn btn-primary form-control">FILTER        
-                <i class="fa fa-filter" style="font-size:20px"></i>
+                <i class="fa fa-filter" style="font-size:20px;"></i>
         </button>
       </div>
 
@@ -120,37 +193,34 @@ command logs title
 
 {% block log_table %}
 <div class="row">
-    <div class="col-sm-12"> 
-        {% if all_logs %} 
-        <div style="width: 100%;overflow: auto;max-height: 600px">       
-        <table class="table table-striped table-bordered table-hover">
+        {% if all_logs %}
+        <table class="logs_table table-striped">
         <thead>
           <tr>
-            <th>Timestamp</th>
-            <th>User</th>
-            <th>Identity</th>
-            <th>Host</th>
-            <th>Command</th>
+            <th class="col-xs-2">Timestamp</th>
+            <th class="col-xs-1">User</th>
+            <th class="col-xs-1">Identity</th>
+            <th class="col-xs-2">Host</th>
+            <th class="col-xs-6 cmd">Command</th>
           </tr>
         </thead>
 
-        <tbody>
+        <tbody class="logs_table_scrollbar">
             {% for log in all_logs %}
             <tr>
-            <td>{{log.timestamp}}</td>
-            <td>{{log.user}}</td>
-            <td>{{log.identity}}</td>
-            <td>{{log.host}}</td>
-            <td>{{log.cmd}}</td>
+            <td class="col-xs-2">{{log.timestamp}}</td>
+            <td class="col-xs-1">{{log.user}}</td>
+            <td class="col-xs-1">{{log.identity}}</td>
+            <td class="col-xs-2">{{log.host}}</td>
+            <td class="col-xs-6 cmd">{{log.cmd}}</td>
             </tr>
             {% endfor %}
         </tbody>
         </table>
-        </div>
         {% else %}
-            <h4> No Record Found</h4>
+        <div class="col-sm-2 col-sm-offset-5" style="margin-top:300px;">
+            <h4>No Record Found</h4>
+        </div>
         {% endif %}
-
-    </div>
 </div>
 {% endblock %}

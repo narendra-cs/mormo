@@ -2,20 +2,36 @@
 <html lang="en">
 
 <head>
-<title>{% block title %} {% endblock %}</title>
+<title>{% block title %}Mormo{% endblock %}</title>
 
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	{% block stylesheet %} {% endblock %}
-    <link rel="stylesheet" type="text/css" media="screen" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700|Montserrat:300,400,500,600,700,800,900|Dancing+Script:400,700&subset=latin-ext" rel="stylesheet">
+    {% block stylesheet %} {% endblock %}
 	<script type="text/javascript" src="//code.jquery.com/jquery-2.1.1.min.js"></script>
-	<script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     {% block extrastyle %} {% endblock %}
     {% block extrahead %}{% endblock %}
+<style>
+    .logo {
+    -webkit-transition: all 0.3s ease-out;
+    transition: all 0.3s ease-out;
+}
+
+.logo a {
+    display: block;
+    color: #fff;
+    text-transform: capitalize;
+    font-weight: 200;
+    font-size: 30px;
+    font-family: 'Dancing Script', cursive;
+}
+</style>
 </head>
 
-<body style="height:100%">
+<body style="height:100%" >
 
 <!--	Navigation Bar	-->
 
@@ -23,25 +39,33 @@
 <nav class="navbar navbar-inverse navbar-fixed-top">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" href="/">{% block branding %}{% endblock%}</a>
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#top-navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        </button>
+        <div class="logo">
+        <a class="navbar-brand" href="{% url 'index'%}">{% block branding %}Mormo{% endblock%}</a>
+        </div>
     </div>
+    <div class="collapse navbar-collapse" id="top-navbar">
     <ul class="nav navbar-nav navbar-right">
-        <li><a href="/"><i class="fa fa-home" style="font-size:16px"></i> Home</a></li>
-        <li><a href="#"><i class="fa fa-user" style="font-size:16px"></i> About</a></li>
-        <li><a href="#"><i class="fa fa-address-book" style="font-size:16px"></i> Contact</a></li>
+        <li><a href="{% url 'index'%}"><i class="fa fa-home" style="font-size:16px"></i> Home</a></li>
+        <li><a href="{% url 'contact'%}"><i class="fa fa-address-book" style="font-size:16px"></i> Contact</a></li>
         {% if user.is_authenticated %}
         <li ><a href="{% url 'cmdMonitor:index' %}">Logs</a></li>
         {% block download_link %}{% endblock %}
-        <li><a href="#"><i class="fa fa-sign-out" style="font-size:16px"></i> Logout</a></li>
+        <li><a href="{% url 'logout'%}"><i class="fa fa-sign-out" style="font-size:16px"></i>&nbsp;Logout</a></li>
         {% else %}
-        <li><a href="#"><i class="fa fa-sign-in" style="font-size:16px"></i> Login</a></li>
+        <li><a href="{% url 'login' %}"><i class="fa fa-sign-in" style="font-size:16px"></i>&nbsp;Login</a></li>
         {% endif %}
     </ul>
+    </div>
   </div>
 </nav>
 {% endblock %}
 
-<!--	Message	-       -->
+
 {% block messages %}
 {% if messages %}
 <ul class="messagelist">
@@ -52,7 +76,6 @@
 {% endif %}
 {% endblock %}
 
-<!--    Error Message   -->
 {% block errormessages %}
 {% if errormessages %}
 <ul class="messagelist">
@@ -66,13 +89,13 @@
 <!--	content		-->
 <div class="container" style="margin-top:80px">
     {% block pretitle %}{% endblock %}
-    {% block content_title %}{% if title %}<h1>{{ title }}</h1>{% endif %}{% endblock %}
+    {% block content_title %}{% endblock %}
 	{% block content %}{% endblock %}
     {% block sidebar %}{% endblock %}
 </div>
 <!-- end content    -->
 
-<!--	Footer			-->
+<!--	Footer		-->
 <footer>
 	{% block footer %} {% endblock %}
 </footer>
