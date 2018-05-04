@@ -1,23 +1,35 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-def main():
+'''
+Read logs from mlog file,make them in proper format ( json, dictionary in python ) and dump into collection of MongoDB database.
+'''
 
-    # import required modules
+__author__ = "Narendra Singh"
+
+
+def main():
+    '''
+    Import require module with exception handling. so if module is not available it will print error.
+    '''
     try:
+        '''
+        Import module thorugh __import__() so it would not be available as 
+        one of the function of this file when we import this file.
+        '''
         datetime    = __import__('datetime')
         db_functions= __import__('db_functions')
     except ImportError as e:
         print(e.__class__.__name__ + ": " + str(e))
 
-    # constant parameters, should not be change
+    # Constant parameters, should not be change
     collection_name = 'logs'
     log_file        = '/var/log/mlog'
 
-    # collection object of our collection in MongoDB
+    # Collection object of logs collection in MongoDB
     collection      = db_functions.mongoConnection()[collection_name]
     
-    # generating dictionary object to dump data into MongoDB
+    # Generating dictionary object to dump data into MongoDB
     posts = []
     try:
         with open(log_file,'r') as logs:
@@ -29,9 +41,9 @@ def main():
     except IOError:
         print("Error: log file not found")
 
-    # insert data into MongoDB
+    # Insert data into MongoDB
     collection.insert_many(posts)
 
-
+# Run main function if script is execute directly not through import.
 if __name__ == '__main__':
     main()
