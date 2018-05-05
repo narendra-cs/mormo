@@ -1,5 +1,6 @@
 static_cdn/* linguist-vendored
+templates/* linguist-vendored
 *.js linguist-vendored
 *.html linguiest-vendored
 *.css linguiest-vendored
-*.py  linguiesthttps://github.com/narendra-cs-vendored=false
+*.py  linguiest-vendored=false
