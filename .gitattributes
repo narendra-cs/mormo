@@ -1,3 +1,4 @@
 static_cdn/* linguist-vendored
-*.py linguist-vendored=python
+*.py linguist-vendored=false
 *.sh linguist-vendored=false
+*.html linguiest-vendored=True
